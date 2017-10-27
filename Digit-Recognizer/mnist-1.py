@@ -1,6 +1,7 @@
 from keras.models import Sequential
 from keras.utils.np_utils import to_categorical
 from keras.layers.core import Dense, Activation, Dropout
+from keras.callbacks import ModelCheckpoint
 
 import pandas as pd
 import numpy as np
@@ -38,8 +39,12 @@ model.summary()
 
 model.compile(loss='mean_squared_logarithmic_error', optimizer='adam', metrics=['accuracy'])
 
+#
+# TODO: ModelCheckpoint before training: saves model weights after each epoch if val_loss decreases
+#
+checkpointer = ModelCheckpoint(filepath='/home/ri/Development/Kaggle/Digit-Recognizer/weights.hdf5', verbose=1, save_best_only=True)
 print("Training...")
-model.fit(X_train, y_train, epochs=20, batch_size=64, validation_split=0.3, verbose=1)
+model.fit(X_train, y_train, epochs=26, batch_size=32, validation_split=0.3, verbose=1, callbacks=[checkpointer])
 
 print("Generating test predictions...")
 preds = model.predict_classes(X_test, verbose=1)
