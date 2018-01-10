@@ -29,22 +29,19 @@ num_classes = y_train.shape[1]
 
 # 3-layer network
 model = Sequential()
-model.add(Dense(784, activation='sigmoid', input_dim=input_dim))
+model.add(Dense(784, init='uniform', activation='relu', input_dim=input_dim))
 model.add(Dropout(0.2))
-model.add(Dense(784, activation='sigmoid'))
+model.add(Dense(784, init='uniform', activation='relu'))
 model.add(Dropout(0.2))
-model.add(Dense(num_classes, activation='sigmoid'))
+model.add(Dense(num_classes, init='uniform', activation='sigmoid'))
 
 model.summary()
 
-model.compile(loss='mean_squared_logarithmic_error', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-#
-# TODO: ModelCheckpoint before training: saves model weights after each epoch if val_loss decreases
-#
-checkpointer = ModelCheckpoint(filepath='/home/ri/Development/Kaggle/Digit-Recognizer/weights.hdf5', verbose=1, save_best_only=True)
+checkpointer = ModelCheckpoint(filepath='weights.hdf5', verbose=1, save_best_only=True)
 print("Training...")
-model.fit(X_train, y_train, epochs=26, batch_size=32, validation_split=0.3, verbose=1, callbacks=[checkpointer])
+model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.3, verbose=1, callbacks=[checkpointer])
 
 print("Generating test predictions...")
 preds = model.predict_classes(X_test, verbose=1)
