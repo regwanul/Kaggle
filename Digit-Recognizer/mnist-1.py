@@ -33,15 +33,15 @@ model.add(Dense(784, init='uniform', activation='relu', input_dim=input_dim))
 model.add(Dropout(0.2))
 model.add(Dense(784, init='uniform', activation='relu'))
 model.add(Dropout(0.2))
-model.add(Dense(num_classes, init='uniform', activation='sigmoid'))
+model.add(Dense(num_classes, init='uniform', activation='softmax'))
 
 model.summary()
 
-model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 checkpointer = ModelCheckpoint(filepath='weights.hdf5', verbose=1, save_best_only=True)
 print("Training...")
-model.fit(X_train, y_train, epochs=10, batch_size=32, validation_split=0.3, verbose=1, callbacks=[checkpointer])
+model.fit(X_train, y_train, epochs=100, batch_size=32, validation_split=0.3, verbose=1, callbacks=[checkpointer])
 
 print("Generating test predictions...")
 preds = model.predict_classes(X_test, verbose=1)
